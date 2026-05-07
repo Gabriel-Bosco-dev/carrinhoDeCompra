@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Loja</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+        }
+
+        .produtos {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            width: 150px;
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 style="text-align:center;">Produtos</h1>
+
+    <div class="produtos" id="produtos"></div>
+
+    <h2 style="text-align:center;">Carrinho</h2>
+
+    <div id="listaCarrinho"></div>
+
+    <h3>Total: R$ <span id="total">0</span></h3>
+    <script>
+
+        let produtos = [
+            { nome: "Mouse", preco: 50, imagem: "MOUSEDOM.JPG" },
+            { nome: "Teclado", preco: 120, imagem: "TECLADO DOM.webp" },
+            { nome: "Headset", preco: 80, imagem: "HEADSET DOM.webp" }
+
+        ]
+        /* Acima cria os 3 produtos que eu quero na loja dentro de um Array, colocando o nome, o preço e trazendo a imagem. */
+
+        let carrinho = []
+
+        function mostrarProdutos() { /*Cria uma função que vai ser chamada lá em baixo para mostrar os produtos*/
+            let area = document.getElementById("produtos") /*Lá em cima eu criei uma DIV class e dei o ID pra ela de "produtos", sendo assim, eu transformo essa div na variável "area" como se fosse um atalho*/
+
+            produtos.forEach((produto, index) => { /*no forEach, ele percorre todo o array com todos os elementos que estão dentro dele. o index busca qual posição ele está dentro do array*/
+
+                let card = document.createElement("div") /*nessa linha esta criando uma nova div do zero e estou armazenando na variável card */
+                card.className = "card" //nessa linha eu atribuo uma classe para o objeto criado e conecto o css que está mais acima
+
+                card.innerHTML = `
+      <img src="${produto.imagem}">
+      <h3>${produto.nome}</h3>
+      <p>R$ ${produto.preco}</p>
+      <button onclick="adicionar(${index})">Adicionar</button>
+    `
+                //Acima está a variavel card que eu criei, mas como ela está vazia pois nada foi acrescentada nela, usamos a variavel dessa div, ou seja, "card" substituo pelo que vai ser trazido pelas caracteristicas que foi colocada lá em produtos
+                //o ${} serve para colocar uma variável dentro da string, para não aparecer literalmente o que está escrito e sim trazer o valor armazenado
+                area.appendChild(card) //nessa linha é adicionado dentro de area o que está em card, como está utilizando o forEach, ele adiciona os 3 valores dentro do array 
+
+            })
+        }
+
+        function adicionar(index) {
+            carrinho.push(produtos[index])
+            atualizarCarrinho()
+        }
+
+        //essa função puxa de produtos mais o index qual produto vai ser adicionado ao carrinho.
+
+        function remover(index) {
+            carrinho.splice(index, 1)
+            atualizarCarrinho()
+        }
+
+        //na função remover, pega o index de qual produto vai ser removido e então a quantidade que vai ser removido, por isso tem o numero 1
+
+        function atualizarCarrinho() {
+            let lista = document.getElementById("listaCarrinho")
+            lista.innerHTML = ""
+
+            carrinho.forEach((item, index) => {
+
+                let div = document.createElement("div")
+
+                div.innerHTML = `
+  <img src="${item.imagem}" width="50">
+  <p>${item.nome}</p>
+  <p>R$ ${item.preco}</p>
+  <button onclick="remover(${index})">Remover</button>
+`
+
+                lista.appendChild(div)
+
+            })
+
+            let total = carrinho.reduce((acc, item) => acc + item.preco, 0)
+            document.getElementById("total").innerText = total
+        }
+
+        mostrarProdutos()
+    </script>
+
+</body>
+
+</html>
